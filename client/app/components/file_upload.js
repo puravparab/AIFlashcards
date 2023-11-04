@@ -33,7 +33,7 @@ const FileUpload = () => {
 				onDragOver={handleDragOver}
 			>
 			</div>
-			<button onClick={}>
+			<button onClick={handleSubmit}>
 				Create!
 			</button>
 		</>

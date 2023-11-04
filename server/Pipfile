@@ -8,6 +8,8 @@ django = "==4.2.7"
 whitenoise = "*"
 django-cors-headers = "*"
 python-dotenv = "*"
+djangorestframework = "*"
+requests = "*"
 
 [dev-packages]
 
