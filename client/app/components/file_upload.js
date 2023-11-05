@@ -12,7 +12,6 @@ const FileUpload = () => {
 		
 		if (file) {
 			setDroppedFile(file);
-			console.log(file)
 		}
 	}
 
@@ -20,8 +19,31 @@ const FileUpload = () => {
 		e.preventDefault()
 	}
 
-	const handleSubmit = (e) => {
-		e.preventDefault()
+	const handleSubmit = async () => {
+		console.log(droppedFile)
+		if (droppedFile){
+			const url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/"
+			console.log(url)
+			// Create a FormData object and append the file to it
+			const formData = new FormData();
+			formData.append('file', droppedFile);
+
+			// Replace 'your_api_endpoint' with the actual API endpoint where you want to submit the file
+			const res = await fetch(url, {
+				method: 'POST',
+				body: formData,
+				headers: {
+				},
+			})
+			if (res.ok){
+				const responseData = await res.json();
+				console.log(responseData)
+				console.log('File submitted successfully!')
+			}
+			else{
+				console.error('File submission failed.');
+			}
+		}
 	}
 
 	return (
