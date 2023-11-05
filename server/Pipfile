@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "==4.2.7"
 whitenoise = "*"
 django-cors-headers = "*"
 python-dotenv = "*"
@@ -12,6 +11,13 @@ djangorestframework = "*"
 requests = "*"
 boto3 = "*"
 django-storages = "*"
+openai = "*"
+matplotlib = "*"
+plotly = "*"
+pandas = "*"
+scipy = "*"
+scikit-learn = "*"
+django = "==4.2"
 
 [dev-packages]
 

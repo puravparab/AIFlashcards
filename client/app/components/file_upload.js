@@ -22,7 +22,7 @@ const FileUpload = () => {
 	const handleSubmit = async () => {
 		console.log(droppedFile)
 		if (droppedFile){
-			const url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/"
+			let url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/"
 			console.log(url)
 			// Create a FormData object and append the file to it
 			const formData = new FormData();
@@ -32,13 +32,22 @@ const FileUpload = () => {
 			const res = await fetch(url, {
 				method: 'POST',
 				body: formData,
-				headers: {
-				},
 			})
 			if (res.ok){
-				const responseData = await res.json();
-				console.log(responseData)
-				console.log('File submitted successfully!')
+				let responseData = await res.json();
+				url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/" + responseData.file_id
+				const response = await fetch(url, {
+					method: 'POST',
+					body: formData,
+				})
+				if (response.ok){
+					responseData = await response.json();
+					console.log('File submitted successfully!')
+					
+				}
+				else{
+					console.error('File submission failed.');
+				}
 			}
 			else{
 				console.error('File submission failed.');

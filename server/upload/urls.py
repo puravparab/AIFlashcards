@@ -21,5 +21,6 @@ from .views import *
 app_name = 'upload'
 
 urlpatterns = [
-	path('', upload_file, name='file upload')
+	path('', upload_file, name='file upload'),
+	path('<int:f_id>', create_store_embeddings, name='file upload'),
 ]
