@@ -82,22 +82,15 @@ def chat_completion(request):
 
 		# Create flashcards
 		response = openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
+			model={settings.FINE_TUNED},
 			messages=[
-				{"role": "system", "content": "You are a helpful assistant who creates flashcards. Reply in the form [{q: a}, {q: a}, ...] and provide multiple flashcards."},
+				{"role": "system", "content": "You are a helpful assistant who creates flashcards."},
 				{"role": "user", "content": chunk},
 			]
 		)
+		print(response)
 		responses += response["choices"][0]["message"]["content"]
 		print(f'{end}/{total} processed')
-
-	response = openai.ChatCompletion.create(
-		model="gpt-3.5-turbo",
-		messages=[
-			{"role": "system", "content": "Organize these flashcards in a clean json format"},
-			{"role": "user", "content": responses},
-		]
-	)
 
 	return Response({"res": responses}, status=status.HTTP_200_OK)
 
@@ -128,3 +121,15 @@ Add to pinecone vector DB
 def insert_pinecone(index, embeddings):
 	index = pinecone.Index(index)
 	index.upsert(embeddings)
+
+
+"""
+Update json entry in document table
+"""
+@api_view(['POST'])
+def update_qa(request, f_id):
+	qa_json = request.data.get("qa_json")
+	document = Document.objects.filter(id=id)
+	document = document[0]
+
+	document.qa_json = qa_json

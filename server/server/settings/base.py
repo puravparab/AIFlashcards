@@ -168,6 +168,7 @@ AWS_S3_FILE_OVERWRITE = os.getenv('AWS_S3_FILE_OVERWRITE') == 'True'
 
 # OPEN AI
 OPEN_AI = os.getenv('OPENAI')
+FINE_TUNED = os.getenv('FINE_TUNED')
 
 # PINECONE
 PINECONE = os.getenv('PINECONE')

@@ -8,10 +8,11 @@ const FileUpload = () => {
 	const [droppedFile, setDroppedFile] = useState(null)
 	const [fileID, setFileID] = useState(null)
 	const [step, setStep] = useState(1)
+	const [qaPairs, setQaPairs] = useState('')
 
 	useEffect(() => {
 		if (step == 2){
-			// chat()
+			chat()
 			redirect(`/document/${fileID}`)
 		}
 	}, [step])
@@ -63,24 +64,25 @@ const FileUpload = () => {
 		}
 	}
 
-// 	const chat = async () => {
-// 		if (droppedFile){
-// 			let url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/chat"
-// 
-// 			const formData = new FormData()
-// 			formData.append('file', droppedFile)
-// 			const res = await fetch(url, {
-// 				method: "POST",
-// 				body: formData
-// 			})
-// 			if (res.ok){
-// 				const responseData = await res.json()
-// 				console.log(responseData)
-// 			} else {
-// 				console.error("Chat completion failed")
-// 			}
-// 		}
-// 	}
+	const chat = async () => {
+		if (droppedFile){
+			let url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/chat"
+
+			const formData = new FormData()
+			formData.append('file', droppedFile)
+			const res = await fetch(url, {
+				method: "POST",
+				body: formData
+			})
+			if (res.ok){
+				const responseData = await res.json()
+				console.log(responseData)
+				setQaPairs(responseData["res"])
+			} else {
+				console.error("Chat completion failed")
+			}
+		}
+	}
 
 	return (
 		<div className={styles.fileUploadContainer}>

@@ -24,4 +24,5 @@ urlpatterns = [
 	path('', upload_file, name='file upload'),
 	path('<int:f_id>', create_store_embeddings, name='file upload'),
 	path('chat', chat_completion , name='chat completion'),
+	path('update/<int:f_id>', update_qa , name='update qa'),
 ]
