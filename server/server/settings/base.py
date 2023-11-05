@@ -52,8 +52,9 @@ INSTALLED_APPS = [
 	# django-rest-framework
 	'rest_framework',
 
-	# API app
-	'upload.apps.UploadConfig'
+	# apps
+	'upload.apps.UploadConfig',
+	'document.apps.DocumentConfig'
 ]
 
 MIDDLEWARE = [
@@ -167,3 +168,9 @@ AWS_S3_FILE_OVERWRITE = os.getenv('AWS_S3_FILE_OVERWRITE') == 'True'
 
 # OPEN AI
 OPEN_AI = os.getenv('OPENAI')
+
+# PINECONE
+PINECONE = os.getenv('PINECONE')
+PINECONE_ENV = os.getenv('PINECONE_ENV')
+PINECONE_INDEX = os.getenv('PINECONE_INDEX')
+PINECONE_NAMESPACE = os.getenv('PINECONE_NAMESPACE')

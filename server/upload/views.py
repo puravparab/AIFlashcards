@@ -10,6 +10,9 @@ import openai
 from openai.embeddings_utils import get_embedding
 openai.api_key = settings.OPEN_AI
 
+import pinecone
+pinecone.init(api_key=settings.PINECONE, environment=settings.PINECONE_ENV)
+
 from .models import Document, Text
 
 """
@@ -42,20 +45,20 @@ Create and store the embeddings of a file
 def create_store_embeddings(request, f_id):
 	file = request.data.get("file")
 	if isinstance(file, InMemoryUploadedFile):
-		# Access the file's content
+		all_embeddings = []
+
 		file_content = file.read().decode('utf-8')
-		# Now, you can process the 'file_content' as a text string
+		
 		count = 0
 		for line in file_content.split('\n'):
-			if count > 10:
-				break
-
 			if line != "\r":
-				# embedding = create_embedding(line)
-				print(line)
+				embedding = create_embedding(line)
 				text_id = create_text_entry(line, f_id)
-				# print(embedding)
+				all_embeddings.append((str(text_id), embedding, {"id": text_id}))
+				print(f'#{count}: {text_id} processed')
 				count += 1
+
+		insert_pinecone(settings.PINECONE_INDEX, all_embeddings)
 		return Response({"file_id": f_id}, status=status.HTTP_200_OK)
 
 	return Response({"error": "error creating document entry"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -79,3 +82,11 @@ def create_text_entry(text, file_id):
 		document = Document.objects.get(id=file_id),
 	)
 	request.save()
+	return request.id
+
+"""
+Add to pinecone vector DB
+"""
+def insert_pinecone(index, embeddings):
+	index = pinecone.Index(index)
+	index.upsert(embeddings)

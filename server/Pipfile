@@ -18,6 +18,7 @@ pandas = "*"
 scipy = "*"
 scikit-learn = "*"
 django = "==4.2"
+pinecone-client = "*"
 
 [dev-packages]
 
