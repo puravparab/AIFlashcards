@@ -10,6 +10,8 @@ django-cors-headers = "*"
 python-dotenv = "*"
 djangorestframework = "*"
 requests = "*"
+boto3 = "*"
+django-storages = "*"
 
 [dev-packages]
 
