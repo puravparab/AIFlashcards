@@ -31,7 +31,7 @@ const Page = ({ params }) => {
       </div>
 
       {data != '' && 
-        <FlashCards data={data} />
+        <FlashCards data={data.qa_json} />
       }
     </div>
   )
