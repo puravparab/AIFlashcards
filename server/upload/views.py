@@ -45,10 +45,9 @@ Create and store the embeddings of a file
 def create_store_embeddings(request, f_id):
 	file = request.data.get("file")
 	if isinstance(file, InMemoryUploadedFile):
+		# Create embeddings
 		all_embeddings = []
-
 		file_content = file.read().decode('utf-8')
-		
 		count = 0
 		for line in file_content.split('\n'):
 			if line != "\r":
@@ -59,9 +58,27 @@ def create_store_embeddings(request, f_id):
 				count += 1
 
 		insert_pinecone(settings.PINECONE_INDEX, all_embeddings)
-		return Response({"file_id": f_id}, status=status.HTTP_200_OK)
+
+
+		return Response({"file_id": f_id, "response": response}, status=status.HTTP_200_OK)
 
 	return Response({"error": "error creating document entry"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+"""
+Use OpenAI chat completion to create multiple flashcards
+"""
+@api_view(['POST'])
+def chat_completion(request, file):
+	file_content = file.read().decode('utf-8')
+	# Create flashcards
+	response = openai.ChatCompletion.create(
+		model="gpt-3.5-turbo",
+		messages=[
+			{"role": "system", "content": "You are a helpful assistant who creates flashcards. Reply in the form [{q: a}, {q: a}, ...] and provide multiple flashcards."},
+			{"role": "user", "content": file_content[:500]},
+		]
+	)
+	return Response({"res": response}, status=status.HTTP_200_OK)
 
 """
 Use OpenAI embedding model to create 

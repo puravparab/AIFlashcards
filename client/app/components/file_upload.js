@@ -1,10 +1,12 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/file_upload.module.css'
 
 const FileUpload = () => {
 	const [droppedFile, setDroppedFile] = useState(null)
+	const [fileID, setFileID] = useState(null)
+	const [step, setStep] = useState(1)
 
 	const handleFileDrop = (e) => {
 		e.preventDefault()
@@ -20,21 +22,19 @@ const FileUpload = () => {
 	}
 
 	const handleSubmit = async () => {
-		console.log(droppedFile)
 		if (droppedFile){
 			let url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/"
-			console.log(url)
-			// Create a FormData object and append the file to it
 			const formData = new FormData();
 			formData.append('file', droppedFile);
 
-			// Replace 'your_api_endpoint' with the actual API endpoint where you want to submit the file
 			const res = await fetch(url, {
 				method: 'POST',
 				body: formData,
 			})
 			if (res.ok){
 				let responseData = await res.json();
+				setFileID(responseData.file_id)
+				// Create and store embeddings
 				url = process.env.NEXT_PUBLIC_SERVER_URL + "upload/" + responseData.file_id
 				const response = await fetch(url, {
 					method: 'POST',
@@ -42,8 +42,8 @@ const FileUpload = () => {
 				})
 				if (response.ok){
 					responseData = await response.json();
-					console.log('File submitted successfully!')
-					
+					console.log(responseData)
+
 				}
 				else{
 					console.error('File submission failed.');
@@ -53,22 +53,30 @@ const FileUpload = () => {
 				console.error('File submission failed.');
 			}
 		}
+		setStep(2)
 	}
 
 	return (
-		<>
-			<p>Drop files here</p>
-			<div 
-				className={styles.fileUploadBox}
-				onDrop={handleFileDrop}
-				onDragOver={handleDragOver}
-			>
-			</div>
-			<button onClick={handleSubmit}>
-				Create!
-			</button>
-		</>
-		
+		<div className={styles.fileUploadContainer}>
+			{step == 1 && 
+				<>
+					<div 
+						className={styles.fileUploadBox}
+						onDrop={handleFileDrop}
+						onDragOver={handleDragOver}
+					>
+						<span>Drag and drop file here</span>
+					</div>
+					<button onClick={handleSubmit}>
+						<span>Create!</span>
+					</button>
+				</>
+			}
+			{step == 2 &&
+				<div>
+				</div>
+			}
+		</div>
 	)
 }
 
